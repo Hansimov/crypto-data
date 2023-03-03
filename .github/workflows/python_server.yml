@@ -1,8 +1,8 @@
 name: Python Server
 run-name: ${{ github.event.head_commit.message }}
-on: [workflow_dispatch]
+on: [push, workflow_dispatch]
 concurrency:
-  group: "server"
+  group: "http-server"
   cancel-in-progress: true
 jobs:
   # python-server:
@@ -22,9 +22,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+        # Gist: install ngrok on ubuntu
+        #   https://gist.github.com/YamiOdymel/d0337a6be3b2f1297c9eeab6c196fcb7
       - name: Run ngrok
         run: |
-          curl "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz" -o "ngrok-v3-stable-linux-amd64.tgz"
-          sudo tar -xvzf ngrok-v3-stable-linux-amd64.tgz
-          ngrok config add-authtoken {{ secrets.NGROK_TOKEN }}
-          ngrok http 23456
+          wget -q "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz"
+          tar -xvzf ngrok-v3-stable-linux-amd64.tgz
+          pwd
+          ls -l
+          /home/runner/work/crypto-data/crypto-data/ngrok config add-authtoken ${{ secrets.NGROK_TOKEN }}
+          /home/runner/work/crypto-data/crypto-data/ngrok http 23456
