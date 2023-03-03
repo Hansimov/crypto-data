@@ -5,16 +5,26 @@ concurrency:
   group: "server"
   cancel-in-progress: true
 jobs:
-  launch-server:
+  # python-server:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: actions/setup-python@v4
+  #       with:
+  #         python-version: "3.9"
+  #     - name: Display Public IP
+  #       run: curl https://api.ipify.org
+  #     - name: Launch Python Server
+  #       run: |
+  #         cd ./web
+  #         python -m http.server 23456
+  ngrok:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
-      - name: Display Public IP
-        run: curl https://api.ipify.org
-      - name: Launch Python Server
+      - name: Run ngrok
         run: |
-          cd ./web
-          python -m http.server 23456
+          curl "https://bin.equinox.io/c/bNyj1mQVY4c/ngrok-v3-stable-linux-amd64.tgz" -o "ngrok-v3-stable-linux-amd64.tgz"
+          sudo tar -xvzf ngrok-v3-stable-linux-amd64.tgz
+          ngrok config add-authtoken {{ secrets.NGROK_TOKEN }}
+          ngrok http 23456
