@@ -5,26 +5,22 @@ concurrency:
   group: "http-server"
   cancel-in-progress: true
 jobs:
-  # python-server:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v3
-  #     - uses: actions/setup-python@v4
-  #       with:
-  #         python-version: "3.9"
-  #     - name: Display Public IP
-  #       run: curl https://api.ipify.org
-  #     - name: Launch Python Server
-  #       run: |
-  #         cd ./web
-  #         python -m http.server 23456
-  ngrok:
+  http-server:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+      - name: Display Public IP
+        run: curl https://api.ipify.org
+      - name: Python Server
+        run: |
+          cd ./web
+          python -m http.server 23456 &
+      - name: Run ngrok
         # Gist: install ngrok on ubuntu
         #   https://gist.github.com/YamiOdymel/d0337a6be3b2f1297c9eeab6c196fcb7
-      - name: Run ngrok
         env:
           NGROK_TGZ: ngrok-v3-stable-linux-amd64.tgz
         run: |
@@ -33,4 +29,4 @@ jobs:
           pwd
           PATH="$(pwd):$PATH"
           ngrok config add-authtoken ${{ secrets.NGROK_TOKEN }}
-          ngrok http 8000
+          ngrok http 23456
