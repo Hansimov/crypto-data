@@ -7,6 +7,8 @@ concurrency:
 jobs:
   http-server:
     runs-on: ubuntu-latest
+    env:
+      SERVER_PORT: 23456
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
@@ -17,7 +19,7 @@ jobs:
       - name: Python Server
         run: |
           cd ./web
-          python -m http.server 23456 &
+          python -m http.server $SERVER_PORT &
       - name: Run ngrok
         # Gist: install ngrok on ubuntu
         #   https://gist.github.com/YamiOdymel/d0337a6be3b2f1297c9eeab6c196fcb7
@@ -29,4 +31,7 @@ jobs:
           pwd
           PATH="$(pwd):$PATH"
           ngrok config add-authtoken ${{ secrets.NGROK_TOKEN }}
-          ngrok http 23456
+          ngrok http $SERVER_PORT &
+      - name: Monitor ngrok
+        run: |
+          while true; do curl http://localhost:4040/api/tunnels; sleep 5; done
