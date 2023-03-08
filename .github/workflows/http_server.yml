@@ -1,6 +1,6 @@
-name: Python Server
+name: HTTP Server
 run-name: ${{ github.event.head_commit.message }}
-on: [push, workflow_dispatch]
+on: [workflow_dispatch]
 concurrency:
   group: "http-server"
   cancel-in-progress: true

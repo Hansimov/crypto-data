@@ -1,4 +1,4 @@
-name: Deploy static pages
+name: Deploy GitHub Pages
 
 on: [workflow_dispatch]
 
